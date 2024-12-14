@@ -4,6 +4,16 @@ from htmlnode import ParentNode, LeafNode
 from inline_markdown import text_to_textnodes
 from textnode import text_node_to_html_node
 
+
+block_type_paragraph = "paragraph"
+block_type_heading = "heading"
+block_type_code = "code"
+block_type_quote = "quote"
+block_type_olist = "ordered_list"
+block_type_ulist = "unordered_list"
+
+
+
 class BlockType(Enum):
     """
     Represents various types of content blocks.
@@ -125,22 +135,38 @@ def block_to_html_node(block):
     :rtype: Any
     :raises ValueError: If the block type is invalid or unrecognized.
     """
+    # print(block)
+    # block_type = block_to_block_type(block)
+    # print(block_type)
+    # match block_type:
+    #     case BlockType.HEADING:
+    #         return process_heading(block)
+    #     case BlockType.PARAGRAPH:
+    #         return process_paragraph(block)
+    #     case BlockType.CODE:
+    #         return process_code(block)
+    #     case BlockType.QUOTE:
+    #         return process_quote(block)
+    #     case BlockType.UNORDERED_LIST:
+    #         return process_list(block, "ul", r"^[\*\-]\s", 2)
+    #     case BlockType.ORDERED_LIST:
+    #         return process_list(block, "ol", r"^\d\.\s", 3)
+    #     case _:
+    #         raise ValueError(f"Invalid block type: {block_type}")
     block_type = block_to_block_type(block)
-    match block_type:
-        case BlockType.HEADING:
-            return process_heading(block)
-        case BlockType.PARAGRAPH:
-            return process_paragraph(block)
-        case BlockType.CODE:
-            return process_code(block)
-        case BlockType.QUOTE:
-            return process_quote(block)
-        case BlockType.UNORDERED_LIST:
-            return process_list(block, "ul", r"^[\*\-]\s", 2)
-        case BlockType.ORDERED_LIST:
-            return process_list(block, "ol", r"^\d\.\s", 3)
-        case _:
-            raise ValueError(f"Invalid block type: {block_type}")
+    if block_type == block_type_paragraph:
+        return process_paragraph(block)
+    if block_type == block_type_heading:
+        return process_heading(block)
+    if block_type == block_type_code:
+        return process_code(block)
+    if block_type == block_type_olist:
+        return process_list(block, "ol", r"^\d\.\s", 3)
+    if block_type == block_type_ulist:
+        return process_list(block, "ul", r"^[\*\-]\s", 2)
+    if block_type == block_type_quote:
+        return process_quote(block)
+    raise ValueError("Invalid block type")
 
 
 def text_to_children(text):
